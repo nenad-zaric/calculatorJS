@@ -26,8 +26,7 @@ class ExpressionTree{
                 this.t.left = t2;
                 stack.push(this.t);
             }
-        }
-        
+        }   
         this.t = stack[stack.length-1]
         console.log(stack);
         stack.pop();
@@ -35,7 +34,7 @@ class ExpressionTree{
 
     //Provera da li je dati karakter operator
     isOperator(c){
-        if(c=="+"|c=="-"|c=="*"|c=="/"){
+        if(c=="+"||c=="-"||c=="*"||c=="/"||c=="("||c==")"){
             return true;
         }
         return false;
@@ -44,11 +43,11 @@ class ExpressionTree{
     evaluateTree(node){ 
         if(node!=null){
             if(node.left == null & node.right == null){
-                return parseInt(node.value);
+                return parseFloat(node.value);
             }
             var leftEval = this.evaluateTree(node.left)
             var rightEval = this.evaluateTree(node.right);
-
+            
             if(node.value == "+"){
                 return leftEval + rightEval;
             }
@@ -65,92 +64,146 @@ class ExpressionTree{
     }
 }
 
-var buffer = "";
+class Buffer{
+    constructor(expression){
+        this.expression = expression;
+        this.display = "0";
+        this.lastSubimt = "0";
+    }
 
-function submit(c){
+    infixToPostfix(){
+        var infix = this.tokenize(this.expression);
+        var stack = [];
+        var postfix = [];
     
-    buffer += c;
-    document.querySelector("input").value = buffer;
-}
-
-function clear(){
-    console.log("Clear")
-    document.querySelector("input").value = "";
-    buffer = "";
-}
-
-function calculate(){
-    var postFixBuffer = infixToPostfix(buffer).split(" ");
-    deletePar(postFixBuffer);
-    console.log("Postfix: " + postFixBuffer);
-    tree = new ExpressionTree(postFixBuffer);
-    console.log(tree.t);
-    result = tree.evaluateTree(tree.t);
-    document.querySelector("input").value = result;
-}
-
-
-
-function infixToPostfix(infix){
-    var postfix = "";
+        infix.push(")");
+        stack.push("(");
     
-    var stack = [];
-
-    for(var i=0;i<infix.length;++i){
-        var c = infix[i];
-
-        if(!isOperator(c)){
-            postfix += c;
-        }
-        else if(c=="("){
-            stack.push(c);
-        }
-        else if(c==")"){
-            while(stack.length > 0 & stack[stack.length-1] != "("){
-                postfix += " ";
-                postfix += stack.pop();
+        for(var i=0;i<infix.length;++i){
+            if(infix[i]=="("){
+                stack.push(infix[i]);
+            }
+        
+            else if(!this.isOperator(infix[i])){
+                postfix.push(infix[i]);
+            }
+            
+            else if(infix[i]==")"){
+                while(stack.length > 0 && stack[stack.length-1] != "("){
+                    if(stack[stack.length-1] !="("){
+                        postfix.push(stack.pop());
+                    }
+                    else{
+                        stack.pop();
+                    }
+                }
+            }
+            else{
+                while(stack.length > 0 && this.precedence(infix[i]) <= this.precedence(stack[stack.length-1])){
+                    postfix.push(stack.pop());
+                }
+                stack.push(infix[i]);
             }
         }
-        else{
-            while(stack.length > 0 && getPriority(c) <= stack[stack.length-1]){
-                postfix += stack.pop();
-                
+        while(stack.length > 0){
+            if(stack[stack.length-1] == "("){
+                stack.pop(); 
             }
-            stack.push(c);
-            postfix += " ";
+            else{
+                console.log(stack[stack.length-1]);
+                postfix.push(stack.pop());
+            }
+    
+        }
+    
+        this.expression = postfix
+    }
+
+    tokenize(expression){
+    
+        var j=0;
+        var tokenized = [];
+    
+        for(var i=0; i<=expression.length; i++){
+            if((this.isOperator(expression[i]) && expression[i] != "(") || i==expression.length-1){
+                var temp = "";
+                for(j; j<i;j++){
+                    if(!this.isOperator(expression[j])){
+                        temp += expression[j];
+                    }
+                }
+                if(temp != ""){
+                    tokenized.push(temp);
+                }
+                tokenized.push(expression[i]);
+            }
+            else if(expression[i] == ("(")){
+                tokenized.push(expression[i]);
+            }
+        }
+        console.log(tokenized);
+        return tokenized;
+    }
+
+    
+    submit(c){
+        //console.log(buffer);
+        if(!(this.isOperatorNoParentasis(c) & (this.isOperatorNoParentasis(this.lastSubimt)))){
+            if(this.expression=="0"){
+                this.display = c;   
+            }
+            else{
+                this.display += c;
+            }
+            this.expression += c;
+            this.lastSubimt = c;
+            document.querySelector("input").value = this.display;
         }
     }
 
-    while(stack.length > 0){
-        postfix += " ";
-        postfix += stack.pop();
+    clear(){
+        console.log("Clear")
+        document.querySelector("input").value = "0";
+        this.expression = "0";
+        this.lastSubimt = "0";
+        
     }
 
-    return postfix
-}
+    calculate(){
+        this.infixToPostfix();
+        console.log("Postfix: " + this.expression);
+        var tree = new ExpressionTree(this.expression);
+        console.log(tree.t);
+        var result = tree.evaluateTree(tree.t);
+        document.querySelector("input").value = result;
+        this.display = result;
+        this.expression = result;
 
-function getPriority(c){
-    if(c =="+"|c=="-"){
-        return 1;
     }
-    else if(c=="*"|c=="*"){
-        return 2;
-    }
-    return -1;
-}
 
-function isOperator(c){
-    if(c=="+"|c=="-"|c=="*"|c=="/"|c=="("|c==")"){
-        return true;
-    }
-    return false;
-}
-
-function deletePar(s){
-    for(var i=0;i<s.length;i++){
-        if(s[i] == "(" | s[i]==")"){
-            console.log(s[i]);
-            s.splice(i,1);
+  
+    precedence(c){
+        if(c =="+"||c=="-"){
+            return 1;
         }
+        else if(c=="*"||c=="/"){
+            return 2;
+        }
+        return -1;
+    }
+    isOperator(c){
+        if(c=="+"||c=="-"||c=="*"||c=="/"||c=="("||c==")"){
+            return true;
+        }
+        return false;
+    }
+    isOperatorNoParentasis(c){
+        if(c=="+"||c=="-"||c=="*"||c=="/"){
+            return true;
+        }
+        return false;
     }
 }
+
+var buffer = new Buffer("0");
+

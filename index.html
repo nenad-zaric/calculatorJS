@@ -12,39 +12,41 @@
         
         <div id="keyboard">
             <div class="row" id="display">
-                <input onkeydown="return false;" type="text">
+                <input onkeydown="return false;" type="text" value="0">
             </div>
             <br>
             <div class="row">
-                <button  class="operatorButton" onclick="submit('(')">(</button>
-                <button  class="operatorButton" onclick="submit(')')">)</button>
-                <button  class="operatorButton" id="c" onclick="window.clear()">c</button>
+                <button  class="operatorButton" onclick="buffer.submit('(')">(</button>
+                <button  class="operatorButton" onclick="buffer.submit(')')">)</button>
+                <button  class="operatorButton" id="c" onclick="window.buffer.clear()">c</button>
             </div>
             <br>
             <div class="row">
-                <button onclick="submit('7')">7</button>
-                <button onclick="submit('8')">8</button>
-                <button onclick="submit('9')">9</button>
-                <button onclick="submit('*')" class="operatorButton">*</button>
+                <button onclick="buffer.submit('7')">7</button>
+                <button onclick="buffer.submit('8')">8</button>
+                <button onclick="buffer.submit('9')">9</button>
+                <button onclick="buffer.submit('*')" class="operatorButton">*</button>
             </div>
             <br>
             <div class="row">
-                <button onclick="submit('4')">4</button>
-                <button onclick="submit('5')">5</button>
-                <button onclick="submit('6')">6</button>
-                <button onclick="submit('-')" class="operatorButton">-</button>
+                <button onclick="buffer.submit('4')">4</button>
+                <button onclick="buffer.submit('5')">5</button>
+                <button onclick="buffer.submit('6')">6</button>
+                <button onclick="buffer.submit('-')" class="operatorButton">-</button>
             </div>
             <br>
             <div class="row">
-                <button onclick="submit('1')">1</button>
-                <button onclick="submit('2')">2</button>
-                <button onclick="submit('3')">3</button>
-                <button onclick="submit('+')" class="operatorButton">+</button>
+                <button onclick="buffer.submit('1')">1</button>
+                <button onclick="buffer.submit('2')">2</button>
+                <button onclick="buffer.submit('3')">3</button>
+                <button onclick="buffer.submit('+')" class="operatorButton">+</button>
             </div>
             <br>
             <div class="row">
-                <button onclick="calculate()" class="operatorButton" id="equals">=</button>
-                <button onclick="submit('/')" class="operatorButton">/</button>
+                <button onclick="buffer.submit('0')">0</button>
+                <button onclick="buffer.submit('.')">.</button>
+                <button onclick="buffer.calculate()" class="operatorButton" id="equals">=</button>
+                <button onclick="buffer.submit('/')" class="operatorButton">/</button>
             </div>
             
         </div>
