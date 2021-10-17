@@ -29,7 +29,7 @@
 <!-- CONTACT -->
 ## Contact
 
-Nenad Zaric - [@AnunnakiNenad](https://twitter.com/AnunnakiNenad) - nzaric31@gmail.com
+Nenad Zaric - nzaric31@gmail.com
 
 Project Link: [https://github.com/nenad-zaric/calculatorJS](https://github.com/nenad-zaric/calculatorJS)
 
