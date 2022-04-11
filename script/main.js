@@ -1,4 +1,4 @@
-//Covr binarnog stabla sa poljem koje sadrzi vrednost i pokazivacima na levu i desnu granu
+//Cvor binarnog stabla sa poljem koje sadrzi vrednost i pokazivacima na levu i desnu granu
 class Node{
     constructor(value){
         this.value = value;
